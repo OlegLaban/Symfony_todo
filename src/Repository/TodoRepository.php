@@ -42,19 +42,18 @@ class TodoRepository extends ServiceEntityRepository
     
     /**
      * 
-     * @param int $id
-     * @param array $data
+     * @param Todo $todo
+     * @param UpdateTodoDTO $dto
      * @return Todo
      */
-    public function updateTodo(UpdateTodoDTO $dto): Todo
+    public function update(Todo $todo, UpdateTodoDTO $dto): Todo
     {
-        $todo = $this->get($dto->id);
         $todo->setTitle($dto->title);
         $todo->setDescription($dto->description);
         
         return $todo;
     }
-
+    
     /**
      * 
      * @param int $id

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Exception\Todo\InvalidStatusTodoException;
 use App\Repository\TodoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,12 @@ class Todo extends BaseEntity
 {
     public const STATUS_CRAETED = 'CREATED';
     
-    public const STATUS_UPDATED = 'UPDATED';
+    public const STATUS_IN_PROGRESS = 'IN_PROGRESS';
+    
+    public const STATUSES = [
+        self::STATUS_CRAETED,
+        self::STATUS_IN_PROGRESS,
+    ];
     
     #[ORM\Column(length: 50)]
     private ?string $status = null;
@@ -35,10 +41,21 @@ class Todo extends BaseEntity
     /**
      * 
      * @param string $status
+     * @throws InvalidStatusTodoException
      * @return self
      */
     public function setStatus(string $status): self
     {
+        if (!in_array($status, self::STATUSES)) {
+            throw new InvalidStatusTodoException(
+                sprintf(
+                        'Status %s is not allowed. Allowed statuses are %s',
+                        $status,
+                        implode(', ', self::STATUSES)
+                )
+            );
+        }
+
         $this->status = $status;
 
         return $this;

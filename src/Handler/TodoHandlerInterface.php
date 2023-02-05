@@ -7,11 +7,13 @@
 
 namespace App\Handler;
 
+use App\Entity\Todo;
+
 /**
  *
  * @author oleglaban
  */
-interface HandlerInterface
+interface TodoHandlerInterface
 {
-    public function handle();
+    public function handle(Todo $todo);
 }
