@@ -7,33 +7,30 @@
 
 namespace App\Handler;
 
-use App\DTO\Todo\UpdateTodoDTO;
 use App\Entity\Todo;
-use App\Repository\TodoRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Description of UpdateTodoHandler
+ * Description of ChangeStatusTodoHandler
  *
  * @author oleglaban
  */
-class UpdateTodoHandler extends BaseHandler implements TodoHandlerInterface
+class ChangeStatusTodoHandler extends BaseHandler implements TodoHandlerInterface
 {
-    public function __construct(protected RequestStack $requestStack, private TodoRepository $repository)
-    {
-        parent::__construct($this->requestStack);
-    }
     
     /**
      * 
      * @param Todo $todo
+     * @throws InvalidStatusTodoException
      * @return Todo
      */
     public function handle(Todo $todo): Todo
     {
         $request = $this->getRequest();
-        $updateTodoDTO = UpdateTodoDTO::createFromRequest($request);
         
-        return $this->repository->update($todo, $updateTodoDTO);
+        $status = $request->get('status', Todo::STATUS_CRAETED);
+        
+        return $todo->setStatus($status);
+        
     }
 }

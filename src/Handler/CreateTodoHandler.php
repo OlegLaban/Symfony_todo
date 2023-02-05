@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author oleglaban
  */
-class CreateTodoHandler extends BaseHandler implements HandlerInterface
+class CreateTodoHandler extends BaseHandler implements TodoHandlerInterface
 {
     public function __construct(RequestStack $requestStack, private EntityManagerInterface $entityManager)
     {
@@ -27,11 +27,9 @@ class CreateTodoHandler extends BaseHandler implements HandlerInterface
      * 
      * @return Todo
      */
-    public function handle(): Todo
+    public function handle(Todo $todo): Todo
     {
         $request = $this->getRequest();
-        
-        $todo = new Todo();
         
         $todo->setStatus(Todo::STATUS_CRAETED);
         $todo->setTitle($request->get('title', ''));
