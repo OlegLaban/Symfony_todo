@@ -34,8 +34,8 @@ class CreateTodoHandler extends BaseHandler implements HandlerInterface
         $todo = new Todo();
         
         $todo->setStatus(Todo::STATUS_CRAETED);
-        $todo->setTitle($request->post('title', ''));
-        $todo->setDescription($request->post('description', null));
+        $todo->setTitle($request->get('title', ''));
+        $todo->setDescription($request->get('description', null));
         $this->entityManager->persist($todo);
         return $todo;
     }

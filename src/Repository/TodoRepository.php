@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\Todo\UpdateTodoDTO;
 use App\Entity\Todo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,7 +39,31 @@ class TodoRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    
+    /**
+     * 
+     * @param int $id
+     * @param array $data
+     * @return Todo
+     */
+    public function updateTodo(UpdateTodoDTO $dto): Todo
+    {
+        $todo = $this->get($dto->id);
+        $todo->setTitle($dto->title);
+        $todo->setDescription($dto->description);
+        
+        return $todo;
+    }
 
+    /**
+     * 
+     * @param int $id
+     * @return Todo
+     */
+    public function get(int $id): Todo
+    {
+        return $this->find($id);
+    }
 //    /**
 //     * @return Todo[] Returns an array of Todo objects
 //     */

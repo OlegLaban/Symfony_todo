@@ -48,13 +48,13 @@ abstract class BaseEntity
     
     /**
      * 
-     * @param \DateTimeImmutable $created_at
+     * @param string $time
      * @return self
      */
     #[ORM\PrePersist]
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(): self
     {
-        $this->created_at = $created_at;
+        $this->created_at = new \DateTimeImmutable('now');
 
         return $this;
     }
@@ -66,13 +66,12 @@ abstract class BaseEntity
     
     /**
      * 
-     * @param \DateTimeImmutable|null $updated_at
      * @return self
      */
     #[ORM\PreUpdate]
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTimeImmutable('now');
 
         return $this;
     }

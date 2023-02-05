@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Handler\UpdateTodoHandler;
 
 /**
  * Description of TodoController
@@ -32,5 +33,18 @@ class TodoController extends AbstractController
           'title' => $todo->getTitle(),
           'description' => $todo->getDescription(),
       ]);
+   }
+   
+   #[Route('/todo/{id}', name: 'update_todo', methods: ['PUT'])]
+   public function update(UpdateTodoHandler $updateTodoHandler, EntityManagerInterface $em): JsonResponse
+   {
+       $todo = $updateTodoHandler->handle();
+       $em->flush();
+       
+       return new JsonResponse([
+           'id' => $todo->getId(),
+           'title' => $todo->getTitle(),
+           'description' => $todo->getDescription(),
+       ]);
    }
 }
