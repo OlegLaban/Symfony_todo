@@ -9,16 +9,16 @@ namespace App\Handler;
 
 use App\Entity\Todo;
 
+
 /**
  *
  * @author oleglaban
  */
-interface TodoHandlerInterface
+interface ListTodoHandlerInterface
 {
     /**
      * 
-     * @param Todo $todo
-     * @return void
+     * @return Todo[]
      */
-    public function handle(Todo $todo): void;
+    public function handle(): array; 
 }

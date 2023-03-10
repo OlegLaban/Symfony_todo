@@ -9,34 +9,39 @@ namespace App\Handler;
 
 use App\Entity\Todo;
 use App\Repository\TodoRepository;
+use App\Service\SerializerService;
 
 /**
  * Description of ListTodoHandler
  *
  * @author oleglaban
  */
-class ListTodoHandler
+class ListTodoHandler implements ListTodoHandlerInterface
 {
+    /**
+     * 
+     * @param TodoRepository $repository
+     */
     public function __construct(private TodoRepository $repository)
     {
     }
     
     /**
      * 
-     * @return array
+     * @return Todo[]
      */
     public function handle(): array
     {
         $todos = $this->repository->findAll();
+        $serializer = SerializerService::getSerializer();
         
-        return array_map(function (Todo $todo) {
-            return [
-                'id' => $todo->getId(),
-                'title' => $todo->getTitle(),
-                'description' => $todo->getDescription(),
-                'status' => $todo->getStatus(),
-            ];
+        return array_map(function (Todo $todo) use ($serializer) {
+            return array_merge($serializer->normalize($todo), [
+                'createdAt' => $todo->getCreatedAt()->format("Y-m-d H:m:s"),
+                'updatedAt' => $todo->getUpdatedAt()?->format("Y-m-d H:m:s"),
+            ]);
         }, $todos);
         
     }
+   
 }

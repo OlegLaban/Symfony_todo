@@ -5,20 +5,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPInterface.php to edit this template
  */
 
-namespace App\Handler;
+namespace App\Service\Interfaces;
 
-use App\Entity\Todo;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  *
  * @author oleglaban
  */
-interface TodoHandlerInterface
+interface SerializerServiceInterface
 {
-    /**
-     * 
-     * @param Todo $todo
-     * @return void
-     */
-    public function handle(Todo $todo): void;
+    public static function getSerializer(): SerializerInterface;
 }

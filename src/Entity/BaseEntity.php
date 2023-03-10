@@ -52,7 +52,7 @@ abstract class BaseEntity
      * @return self
      */
     #[ORM\PrePersist]
-    public function setCreatedAt(): self
+    public function setCreatedAt(): static
     {
         $this->created_at = new \DateTimeImmutable('now');
 
@@ -69,7 +69,7 @@ abstract class BaseEntity
      * @return self
      */
     #[ORM\PreUpdate]
-    public function setUpdatedAt(): self
+    public function setUpdatedAt(): static
     {
         $this->updated_at = new \DateTimeImmutable('now');
 

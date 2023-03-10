@@ -9,9 +9,9 @@ namespace App\Controller;
 
 use App\Entity\Todo;
 use App\Handler\ChangeStatusTodoHandler;
-use App\Handler\CreateTodoHandler;
+use App\Handler\ListTodoHandlerInterface;
 use App\Handler\ListTodoHandler;
-use App\Handler\UpdateTodoHandler;
+use App\Handler\TodoHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,18 +25,34 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TodoController extends AbstractController
 {
+    
+    /**
+     * 
+     * @param TodoHandlerInterface $createTodoHandler
+     * @param TodoHandlerInterface $updateTodoHandler
+     * @param ChangeStatusTodoHandler $changeStatusTodoHandler
+     */
+    public function __construct(
+            private TodoHandlerInterface $createTodoHandler,
+            private TodoHandlerInterface $updateTodoHandler,
+            private TodoHandlerInterface $changeStatusTodoHandler
+    ) {
+    }
    
+    /**
+     * @param ListTodoHandler $todoHandler
+     */
    #[Route('/todos', name: 'list_todo', methods: ['GET'])]
-   public function index(ListTodoHandler $todoHandler): JsonResponse
+   public function index(ListTodoHandlerInterface $todoHandler): JsonResponse
    {
        return new JsonResponse($todoHandler->handle());
    }
     
     
    #[Route('/todo', name: 'create_todo')]
-   public function craate(CreateTodoHandler $createTodoHandler, EntityManagerInterface $em): JsonResponse
+   public function craate(EntityManagerInterface $em): JsonResponse
    {
-      $todo = $createTodoHandler->handle(new Todo());
+      $todo = $this->createTodoHandler->handle(new Todo());
       $em->flush();
       
       // TODO - add serializer
@@ -49,9 +65,9 @@ class TodoController extends AbstractController
    }
    
    #[Route('/todo/{id}', name: 'update_todo', methods: ['PUT'])]
-   public function update(Todo $todo, UpdateTodoHandler $updateTodoHandler, EntityManagerInterface $em): JsonResponse
+   public function update(Todo $todo, EntityManagerInterface $em): JsonResponse
    {
-       $updateTodoHandler->handle($todo);
+       $this->updateTodoHandler->handle($todo);
        $em->flush();
        
        return new JsonResponse([
@@ -62,14 +78,19 @@ class TodoController extends AbstractController
        ]);
    }
    
+   /**
+    * 
+    * @param Todo $todo
+    * @param EntityManagerInterface $em
+    * @return JsonResponse
+    */
    #[Route('todo/{id}/status', name: 'change_tood_status', methods: ['PUT'])]
    public function changeStatus(
             Todo $todo,
-            ChangeStatusTodoHandler $changeStatusTodoHandler,
             EntityManagerInterface $em
     ): JsonResponse
     {
-        $changeStatusTodoHandler->handle($todo);
+        $this->changeStatusTodoHandler->handle($todo);
         $em->flush();
         
         return new JsonResponse([
